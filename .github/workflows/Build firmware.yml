@@ -63,6 +63,14 @@ jobs:
         FW_FILE_NAME="$(find padavan-ng/trunk/images -type f -regextype posix-extended -iregex ".*\.(trx|bin)$" \
                         -printf "%T@\t%f\n" | sort -V | tail -1 | cut -f2)"
         cp "padavan-ng/trunk/images/$FW_FILE_NAME" .
+        
+        # Create 128KB empty file and recovery firmware
+        dd if=/dev/zero of=128kempty.bin bs=128k count=1
+        cat 128kempty.bin "$FW_FILE_NAME" > tp_recovery.bin
+        
+        # Download TFTP server
+        wget -O tftpd64.464.zip https://bitbucket.org/phjounin/tftpd64/downloads/tftpd64.464.zip
+        
         echo "FW_FILE_NAME=$FW_FILE_NAME" >> $GITHUB_ENV
         echo "BUILD_TIMESTAMP=$(date '+%Y.%m.%d_%H.%M.%S')" >> $GITHUB_ENV
 
@@ -73,6 +81,8 @@ jobs:
         retention-days: 7
         path: |
           ${{ env.FW_FILE_NAME }}
+          tp_recovery.bin
+          tftpd64.464.zip
           build.config
 
     - name: Create Release
@@ -95,6 +105,26 @@ jobs:
         asset_path: ./${{ env.FW_FILE_NAME }}
         asset_name: ${{ env.FW_FILE_NAME }}
         asset_content_type: application/octet-stream
+
+    - name: Upload Recovery Firmware Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./tp_recovery.bin
+        asset_name: tp_recovery.bin
+        asset_content_type: application/octet-stream
+
+    - name: Upload TFTP Server Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./tftpd64.464.zip
+        asset_name: tftpd64.464.zip
+        asset_content_type: application/zip
 
     - name: Upload Config Asset
       uses: actions/upload-release-asset@v1
