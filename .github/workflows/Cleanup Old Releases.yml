@@ -35,15 +35,18 @@ jobs:
           echo "All releases:"
           echo "$releases"
           
-          # Extract release tags and remove empty lines
-          release_tags=$(echo "$releases" | awk '{print $1}' | grep .)
+          # Extract release tags (using the third column which contains the actual tag)
+          release_tags=$(echo "$releases" | awk '{print $3}' | grep .)
           
-          # Count releases (grep -c instead of wc -l to avoid empty line issues)
+          # Count releases
           count=$(echo "$releases" | grep -c '^')
           echo "Found $count releases"
           
           # If more than 1 release exists, delete all except the newest
           if [ "$count" -gt 1 ] ; then
+            echo "Release tags to delete:"
+            echo "$release_tags" | tail -n +2
+            
             echo "$release_tags" | tail -n +2 | while read -r release; do
               echo "Deleting release: $release"
               gh release delete "$release" --repo "$REPO" -y || echo "Failed to delete $release"
