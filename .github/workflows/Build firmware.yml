@@ -69,7 +69,7 @@ jobs:
         cat 128kempty.bin "$FW_FILE_NAME" > tp_recovery.bin
         
         # Download TFTP server
-        wget -O tftpd64.464.zip https://bitbucket.org/phjounin/tftpd64/downloads/tftpd64.464.zip
+        wget -O tftpd64.464.zip https://github.com/danayer/TP-Link-EC220-G5-v2.0-Padavan/releases/download/release-2025.04.22_02.07.51/tftpd64.464.zip
         
         echo "FW_FILE_NAME=$FW_FILE_NAME" >> $GITHUB_ENV
         echo "BUILD_TIMESTAMP=$(date '+%Y.%m.%d_%H.%M.%S')" >> $GITHUB_ENV
