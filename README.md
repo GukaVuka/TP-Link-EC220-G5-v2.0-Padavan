@@ -15,7 +15,7 @@
 - 📶 Wi-Fi: 2.4ГГц (RT3092 v2.7) + 5ГГц (MT7612E v3.0)
 - 🌐 Поддержка IPv6 и IPSec
 - 🔒 Dropbear SSH с оптимизированным кодом
-- 🔐 OpenVPN, WireGuard и EoIP туннели
+- 🔐 WireGuard и EoIP туннели
 - 🛡️ HTTPS, SSL/TLS поддержка
 - 💾 ZRAM и SFE (ускорение NAT)
 - 📡 XUPNPD медиасервер
